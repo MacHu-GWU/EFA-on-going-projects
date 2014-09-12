@@ -112,11 +112,22 @@ def unit_test1():
     print dist(cd1, cd2)
 
 def unit_test2():
+    addr_list = load_jt('address_list.json')
+    print len(addr_list)
+    print len(set(addr_list))
+    
+    addr_geocoded = list( load_jt('address_geocoded.json').keys() )
+    print len(addr_geocoded)
+    print len(set(addr_geocoded))
+    
+def main():
     '''batch_geocoding'''
     addr_list = load_jt('address_list.json') # <== the file you save your todo address list
     addr_geocoded = load_jt('address_geocoded.json') # <== the file you want to save your result
     batch_geocoding(addr_list, addr_geocoded)
     
+
 if __name__ == '__main__':
+#     main()
 #     unit_test1()
     unit_test2()
