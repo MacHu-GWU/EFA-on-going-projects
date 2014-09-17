@@ -5,8 +5,9 @@
 
 import psycopg2
 from parse_html import records_from_file
-from LinearSpider.jt import *
+from HSH.Data.jt import *
 import os, shutil
+import time
 
 conn = psycopg2.connect(host = '10.0.80.180',  dbname = 'securiport', user = 'postgres', password = '')
 c = conn.cursor()
@@ -44,7 +45,8 @@ def create_table():
     c.execute(cmd) # flight_arrival
     conn.commit()
     
-def push_departure(path_dpt, path_trash):
+
+def push_departure(path_dpt):
     ## push DEPARTURE
     for fname in os.listdir(path_dpt):
         records = records_from_file(os.path.join(path_dpt, fname), mode = 'departure')
@@ -61,11 +63,10 @@ def push_departure(path_dpt, path_trash):
                     conn.commit()
         else:
             conn.commit()
-    
-        shutil.move(os.path.join(path_dpt, fname), os.path.join(path_trash, fname))
+        os.remove(os.path.join(path_dpt, fname))
         print 'INSERT %s to DB success! %s records' % (os.path.join(path_dpt, fname), len(records) )
 
-def push_arrival(path_arv, path_trash):
+def push_arrival(path_arv):
     ## push ARRIVAL
     for fname in os.listdir(path_arv):
         records = records_from_file(os.path.join(path_arv, fname), mode = 'arrival')
@@ -82,13 +83,17 @@ def push_arrival(path_arv, path_trash):
                     conn.commit()
         else:
             conn.commit()
-        shutil.move(os.path.join(path_arv, fname), os.path.join(path_trash, fname))
+        os.remove(os.path.join(path_arv, fname))
         print 'INSERT %s to DB success! %s records' % (os.path.join(path_arv, fname), len(records) )
-        
+
 if __name__ == '__main__':
     try:
         create_table()
     except:
         conn.rollback()
-    push_departure(r'C:\HSH\DataWarehouse\TSA_flight\raw_html\departures', r'C:\HSH\DataWarehouse\TSA_flight\trash\dpt')
-    push_arrival(r'C:\HSH\DataWarehouse\TSA_flight\raw_html\arrivals', r'C:\HSH\DataWarehouse\TSA_flight\trash\arv')
+    while 1:
+        print 'PUSHING...'
+        push_departure(r'departure')
+        push_arrival(r'arrival')
+        time.sleep(1200)
+        print 'SLEEPING...'

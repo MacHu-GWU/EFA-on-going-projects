@@ -30,10 +30,9 @@ def process_time_interval(text):
 
 def crawl_by_airport_date(airport, date):
     
-    path = r'C:\Users\Sanhe.Hu\Data_warehouse\TSA_flight\raw_html\arrivals'
+    path = r'arrival'
     
     driver = webdriver.Firefox()
-
     try:
         driver.get('http://www.flightstats.com/go/FlightStatus/flightStatusByAirport.do?airportQueryType=1') # arrivals
         sleep(1)
@@ -61,11 +60,11 @@ def crawl_by_airport_date(airport, date):
                     select = Select(driver.find_element_by_xpath("//div[@class='uiComponent674']//select[@id='airportQueryTime']"))
                     select.select_by_visible_text(option)
                     html = driver.page_source
-                    if sys.getsizeof(html) >= 65000: # 说明html工作正常
+                    if sys.getsizeof(html) >= 10000: # 说明html工作正常
                         with open(os.path.join(path, fname), 'wb') as f:
                             f.write(html)
                         topt._dump()
-                        print '\tSUCCESS! %s %s %s' % (date, airport, option)
+                        print '\tSUCCESS! %s %s %s %s' % (date, airport, option, datetime.datetime.now())
                     else:
                         log.write('arrivals bad html', '%s %s %s' % (date, airport, option))
         except:
@@ -75,11 +74,11 @@ def crawl_by_airport_date(airport, date):
                 topt.add(date, airport) # 只要页面读出来，就算爬过了
                 if not os.path.exists(os.path.join(path, fname)):
                     html = driver.page_source # 可能出错
-                    if sys.getsizeof(html) >= 65000: # 说明html工作正常
+                    if sys.getsizeof(html) >= 10000: # 说明html工作正常
                         with open(os.path.join(path, fname), 'wb') as f:
                             f.write(html)
                         topt._dump()
-                        print '\tSUCCESS! %s %s %s' % (date, airport, option)
+                        print '\tSUCCESS! %s %s %s %s' % (date, airport, option, datetime.datetime.now())
                     else:
                         log.write('arrivals bad html', '%s %s %s' % (date, airport, option))
             except:
@@ -92,9 +91,8 @@ def crawl_by_airport_date(airport, date):
 if __name__ == '__main__':
     log = Log()
     topt = Task_optimizer(r'reference/topt_arv.json') ## initial arrivals task optimizer
-#     airport_codelist = load_jt(r'FlightCrawler\airport_codelist.json') # load airport code list
-#     for date in dt_interval_generator(datetime.datetime.strftime( datetime.datetime.now(), '%Y-%m-%d'),
-#                                       datetime.datetime.strftime( datetime.datetime.now() + datetime.timedelta(2), '%Y-%m-%d' )  ): 
-    for date in dt_interval_generator('2014-09-12', '2014-09-14'): 
+##    for date in dt_interval_generator(datetime.datetime.strftime( datetime.datetime.now(), '%Y-%m-%d'),
+##                                      datetime.datetime.strftime( datetime.datetime.now() + datetime.timedelta(2), '%Y-%m-%d' )  ): 
+    for date in dt_interval_generator('2014-09-16', '2014-09-17'): 
         for airport in topt.opt_list(date):
             crawl_by_airport_date(airport = airport, date = date)

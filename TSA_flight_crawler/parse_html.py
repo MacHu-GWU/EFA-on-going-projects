@@ -14,7 +14,7 @@ import sys
 import hashlib
 import pickle
 
-valid_airport_code = load_jt('airport_codelist.json')
+valid_airport_code = load_jt(r'reference\constant\airport_codelist.json')
 
 def md5_obj(obj):
     '''return md5 value from a PYTHON OBJECT
@@ -108,7 +108,7 @@ def records_from_file(fname, mode):
                 origin, flight, airline, scheduled_time, actual_time, Terminal_Gate, status, equip = tag2row(tr, valid_airport_code, date)
             if c.next() >= 2: # 从第3个tr tag开始，才是正确的航班信息
                 if (origin in valid_airport_code) and (destination in valid_airport_code):
-                    GUID = md5_obj( (origin, destination, flight, equip) )
+                    GUID = md5_obj( (origin, destination, flight, scheduled_time) )
                     records.append( (GUID, origin, destination, flight, airline, scheduled_time, actual_time, Terminal_Gate, status, equip) )
         except:
             pass
