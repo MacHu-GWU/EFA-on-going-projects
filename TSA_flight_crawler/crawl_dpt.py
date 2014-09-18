@@ -29,14 +29,7 @@ def process_time_interval(text):
     return '%s-%s' % (str(st).zfill(2), str(et).zfill(2))
 
 def crawl_by_airport_date(airport, date):
-<<<<<<< HEAD
     path = r'departure' 
-=======
-    
-    path = r'departure' 
-    
-    driver = webdriver.Firefox()
->>>>>>> origin/master
     try:
         driver.get('http://www.flightstats.com/go/FlightStatus/flightStatusByAirport.do?airportQueryType=2') # departures
         sleep(1)
@@ -91,15 +84,9 @@ def crawl_by_airport_date(airport, date):
     except:
         log.write('departures failed to enter date, airport and send keys', '%s %s' % (date, airport))
         pass
-<<<<<<< HEAD
     
 if __name__ == '__main__':
     driver = webdriver.Firefox()
-=======
-    driver.close()
-    
-if __name__ == '__main__':
->>>>>>> origin/master
     log = Log()
     topt = Task_optimizer(r'reference/topt_dpt.json') ## initial departures task optimizer
 ##    for date in dt_interval_generator(datetime.datetime.strftime( datetime.datetime.now(), '%Y-%m-%d'),
@@ -107,7 +94,4 @@ if __name__ == '__main__':
     for date in dt_interval_generator('2014-09-16', '2014-09-17'): 
         for airport in topt.opt_list(date):
             crawl_by_airport_date(airport = airport, date = date)
-<<<<<<< HEAD
     driver.close()
-=======
->>>>>>> origin/master
