@@ -1,9 +1,7 @@
 ##encoding=utf8
 
-'''python按键精灵脚本爬虫
-目标 = https://www.rxpricequotes.com/
-爬下这个网站数据库中所有的药品名称，这样我们就可以一个个的发送查询
-然后爬下这个网站数据库中的所有价格信息
+'''
+https://www.rxpricequotes.com/
 '''
 
 import pyperclip
@@ -18,6 +16,8 @@ def generate_querylist():
     query_list = list()
     for i in 'abcedfghijklmnopqrstuvwxyz ':
         for j in 'abcedfghijklmnopqrstuvwxyz ':
+#     for i in 'abcedfghijklmnopqrstuvwxyz ':
+#         for j in 'abcedfghijklmnopqrstuvwxyz ':
             query_list.append(i+j)
     return query_list
 
@@ -28,11 +28,11 @@ def enter_query(text, t = 0.1):
     3.清空搜索框
     4.输入关键字
     '''
-    double_click(610, 186, dl=t) # 错误文本框 1087, 168
-    double_click(303, 339, dl=t) # 搜索文本框 802, 322
+    Double_click(632, 205, dl=t) # 错误文本框 全屏1087, 168 小窗610, 186
+    Double_click(347, 314, dl=t) # 搜索文本框 全屏802, 322 小窗303, 339
     Ctrl_a(dl=t)
     Delete(dl=t)
-    type_string(text, dl=t)
+    Type_String(text, dl=t)
 
 def main():
     try:
@@ -41,16 +41,27 @@ def main():
         druglist = set()  
     query_list = generate_querylist()
     
-    delay(1)
+    Delay(1)
+    drugname = ''
     for query in query_list:
         for i in range(1,51):
+            print 'Now crawling %s - %s' % (query, i)
+            Delay(0.5)
             enter_query(query, t = 0.1)
-            delay(1)
+            Delay(4)
             Down(i, dl=0.1)
-            Enter(dl=0.1)
-            Ctrl_a(dl=0.1)
-            Ctrl_c(dl=0.1)
-            druglist.add(pyperclip.paste())
-            dump_jt(list(druglist), 'druglist.json', replace = True)
-print whereXY()
-# main()
+            Enter(dl=0.5)
+            Ctrl_a(dl=0.5)
+            Ctrl_c(dl=0.5)
+            try:
+                if pyperclip.paste() == drugname: # 如过跟上一次重复，就跳过
+                    break
+                else:
+                    drugname = pyperclip.paste()
+                    druglist.add(drugname)
+                    dump_jt(list(druglist), 'druglist.json', replace = True)
+            except:
+                pass
+# print WhereXY()
+Delay(10)
+main()

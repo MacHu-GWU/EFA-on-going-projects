@@ -91,9 +91,27 @@ if __name__ == '__main__':
         create_table()
     except:
         conn.rollback()
+<<<<<<< HEAD
+        
+    base = r'C:\Users\Sanhe.Hu\AppData\Local\Temp'
+=======
+>>>>>>> origin/master
     while 1:
         print 'PUSHING...'
         push_departure(r'departure')
         push_arrival(r'arrival')
+<<<<<<< HEAD
+        for fname in os.listdir(base): ## delete the temp file folder
+            if fname.startswith('tmp'):
+                try:
+                    shutil.rmtree(os.path.join(base, fname))
+                except:
+                    pass
+                
+        print 'SLEEPING...'
+        time.sleep(1200)
+        
+=======
         time.sleep(1200)
         print 'SLEEPING...'
+>>>>>>> origin/master
